@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from service.team_service import create_new_team, update_existing_team, remove_team, retrieve_team
+from service.team_service import create_new_team, update_existing_team, remove_team, retrieve_team, compare_teams
 
 teams_blueprint = Blueprint("teams", __name__)
 
@@ -39,3 +39,23 @@ def get_team_route(team_id):
         return jsonify(team), 200
     else:
         return jsonify({'error': 'Team not found'}), 404
+
+@teams_blueprint.route('/compare', methods=['GET'])
+def compare_teams_endpoint():
+    team_ids = [request.args.get(f'team{i}') for i in range(1, len(request.args) + 1)]
+    team_ids = [team_id for team_id in team_ids if team_id]
+
+    if len(team_ids) < 2:
+        return jsonify({"error": "At least two teams must be provided for comparison."}), 400
+
+    try:
+        team_ids = list(map(int, team_ids))
+    except ValueError:
+        return jsonify({"error": "Team IDs must be valid integers."}), 400
+
+    result = compare_teams(team_ids)
+
+    if result is None:
+        return jsonify({"error": "One or more teams do not exist."}), 404
+
+    return jsonify(result)

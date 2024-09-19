@@ -38,8 +38,10 @@ def create_player(player_data: dict, position_avg: dict) -> Player:
         turnovers=player_data['turnovers'],
         two_fg=player_data['twoFg'],
         two_attempts=player_data['twoAttempts'],
+        two_percent=player_data['twoPercent'],
         three_fg=player_data['threeFg'],
-        three_attempts=player_data['threeAttempts']
+        three_attempts=player_data['threeAttempts'],
+        three_percent=player_data['threePercent']
     )
 
     player.atr = player.assists / player.turnovers if player.turnovers > 0 else 0

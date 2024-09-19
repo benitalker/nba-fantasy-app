@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.register_blueprint(players_blueprint, url_prefix="/api/players")
 app.register_blueprint(teams_blueprint, url_prefix="/api/teams")
 
-seed()
 
 if __name__ == '__main__':
+    seed()
     app.run(debug=True)

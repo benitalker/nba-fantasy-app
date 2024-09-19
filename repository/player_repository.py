@@ -17,16 +17,16 @@ def create_player(player: Player) -> int:
             '''
             INSERT INTO players (
                 player_name, position, team, season, games, points, assists, turnovers, 
-                two_fg, two_attempts, three_fg, three_attempts, atr, ppg_ratio
+                two_fg, two_attempts,two_percent, three_fg, three_attempts,three_percent, atr, ppg_ratio
             ) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s) 
             RETURNING id
             ''',
             (
                 player.player_name, player.position, player.team, player.season,
                 player.games, player.points, player.assists, player.turnovers,
-                player.two_fg, player.two_attempts, player.three_fg, player.three_attempts,
-                player.atr, player.ppg_ratio
+                player.two_fg, player.two_attempts,player.two_percent, player.three_fg, player.three_attempts,
+                player.three_percent,player.atr, player.ppg_ratio
             )
         )
         result = cursor.fetchone()
@@ -46,8 +46,8 @@ def get_players_by_position_and_season(position: str, season: int = None) -> Lis
                 season,
                 points,
                 games,
-                two_fg / NULLIF(two_attempts, 0) AS two_percent,
-                three_fg / NULLIF(three_attempts, 0) AS three_percent,
+                two_percent,
+                three_percent,
                 atr,
                 ppg_ratio
             FROM players

@@ -25,8 +25,10 @@ def create_table_players():
             turnovers FLOAT,
             two_fg FLOAT,
             two_attempts FLOAT,
+            two_percent FLOAT,
             three_fg FLOAT,
             three_attempts FLOAT,
+            three_percent FLOAT,
             atr FLOAT,
             ppg_ratio FLOAT
         )

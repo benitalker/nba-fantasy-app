@@ -74,3 +74,30 @@ def get_team_by_id(team_id: int) -> dict:
 
     return {'team_name': team_name, 'players': players}
 
+
+def get_team_by_id_statistic(team_id: int) -> dict:
+    query = """
+        SELECT t.team_name, p.id AS player_id, p.player_name, p.position, p.team,
+               p.points, p.two_percent , p.three_percent, p.atr, p.ppg_ratio
+        FROM teams t
+        JOIN team_players tp ON t.id = tp.team_id
+        JOIN players p ON tp.player_id = p.id
+        WHERE t.id = %s
+    """
+    with get_db_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(query, (team_id,))
+            result = cursor.fetchall()
+
+    if not result:
+        return None
+
+    team_name = result[0]['team_name']
+    players = [{'player_id': row['player_id'], 'player_name': row['player_name'], 'position': row['position'],
+                'team': row['team'], 'points': row['points'], 'two_percent': row['two_percent'],
+                'three_percent': row['three_percent'], 'atr': row['atr'], 'ppg_ratio': row['ppg_ratio']} for row in
+               result]
+
+    return {'team_name': team_name, 'players': players}
+
+
