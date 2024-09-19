@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from service.team_service import create_new_team, update_existing_team, remove_team, retrieve_team, compare_teams
+from service.team_service import create_new_team, update_existing_team, remove_team, retrieve_team, compare_teams, \
+    compare_teams_by_name
 
 teams_blueprint = Blueprint("teams", __name__)
 
@@ -59,3 +60,21 @@ def compare_teams_endpoint():
         return jsonify({"error": "One or more teams do not exist."}), 404
 
     return jsonify(result)
+
+@teams_blueprint.route('/stats', methods=['GET'])
+def compare_teams_by_name_endpoint():
+    team_names = [request.args.get(f'team{i}') for i in range(1, 4)]
+    team_names = [team_name for team_name in team_names if team_name]
+
+    if len(team_names) < 2:
+        return jsonify({"error": "At least two teams must be provided for comparison."}), 400
+    if len(team_names) > 3:
+        return jsonify({"error": "No more than three teams can be compared."}), 400
+
+    result = compare_teams_by_name(team_names)
+
+    if result is None:
+        print(result)
+        return jsonify({"error": "One or more teams do not exist."}), 404
+
+    return jsonify(result), 200
