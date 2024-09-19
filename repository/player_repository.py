@@ -1,3 +1,5 @@
+from typing import List
+
 from api.players_api import fetch_data
 from models.Player import Player
 from repository.database import get_db_connection
@@ -33,3 +35,31 @@ def create_player(player: Player) -> int:
         new_id = result['id']
         connection.commit()
         return new_id
+
+def get_players_by_position_and_season(position: str, season: int = None) -> List[dict]:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        query = '''
+            SELECT
+                player_name,
+                team,
+                position,
+                season,
+                points,
+                games,
+                two_fg / NULLIF(two_attempts, 0) AS two_percent,
+                three_fg / NULLIF(three_attempts, 0) AS three_percent,
+                atr,
+                ppg_ratio
+            FROM players
+            WHERE position LIKE %s
+        '''
+        params = [f'%{position}%']
+
+        if season is not None:
+            query += ' AND season = %s'
+            params.append(season)
+
+        cursor.execute(query, tuple(params))
+        players = cursor.fetchall()
+
+    return players
