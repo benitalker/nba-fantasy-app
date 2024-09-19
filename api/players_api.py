@@ -5,7 +5,7 @@ from service.creating_player_service import compute_position_stats, create_playe
 
 
 def fetch_data(season: int) -> List[Player]:
-    url = f"http://b8c40s8.143.198.70.30.sslip.io/api/PlayerDataTotals/query?season={season}&pageSize=10"
+    url = f"http://b8c40s8.143.198.70.30.sslip.io/api/PlayerDataTotals/query?season={season}&pageSize=100"
     response = requests.get(url)
     data = response.json()
 

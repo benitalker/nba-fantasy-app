@@ -7,4 +7,4 @@ def seed():
         create_tables()
         is_tables_exists()
         load_players()
-    # drop_all_tables()
+    #drop_all_tables()

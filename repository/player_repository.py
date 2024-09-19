@@ -63,3 +63,14 @@ def get_players_by_position_and_season(position: str, season: int = None) -> Lis
         players = cursor.fetchall()
 
     return players
+
+def get_player_position_by_id(id: int) -> str:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT position FROM players WHERE id = %s',
+            (id,)
+        )
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError(f"Player with ID {id} not found.")
+        return result['position']

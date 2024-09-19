@@ -7,10 +7,8 @@ players_blueprint = Blueprint("players", __name__)
 def get_players_by_position():
     position = request.args.get('position')
     season = request.args.get('season', default=None, type=int)
-
     if not position or position not in ['C', 'PF', 'SF', 'SG', 'PG']:
         return jsonify({"error": "Position is required and must be one of C, PF, SF, SG, PG."}), 400
-
     try:
         players = get_players_by_position_and_season(position, season)
         return jsonify(players), 200
